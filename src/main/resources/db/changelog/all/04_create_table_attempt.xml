@@ -1,0 +1,21 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create table attempt" author="Vlad">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="attempt"/>
+            </not>
+        </preConditions>
+        <createTable tableName="attempt">
+            <column name="id" type="bigserial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ip" type="TEXT"/>
+            <column name="time" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

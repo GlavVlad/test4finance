@@ -1,0 +1,24 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="fill table term" author="Vlad">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="term"/>
+        </preConditions>
+        <sql>
+            INSERT INTO term (id, max_amount, percent)
+            VALUES (1, 10000, 13.5);
+
+            INSERT INTO term (id, max_amount, percent)
+            VALUES (2, 4000, 18.3);
+
+            INSERT INTO term (id, max_amount, percent)
+            VALUES (3, 60000, 7.5);
+
+            ALTER SEQUENCE IF EXISTS term_id_seq START 100;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
