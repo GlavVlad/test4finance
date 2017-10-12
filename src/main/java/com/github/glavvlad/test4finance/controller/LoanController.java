@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalTime;
 
 /**
  * @author Vlad on 08.10.17.
@@ -30,6 +31,6 @@ public class LoanController {
 
 	@PostMapping
 	public LoanDto apply(@RequestBody ApplyLoanDto dto, HttpServletRequest request) {
-		return service.apply(dto, request.getRemoteAddr());
+		return service.apply(dto, request.getRemoteAddr(), LocalTime.now());
 	}
 }

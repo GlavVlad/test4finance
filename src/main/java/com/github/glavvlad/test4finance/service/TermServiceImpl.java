@@ -7,7 +7,6 @@ import com.github.glavvlad.test4finance.repository.TermRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -25,8 +24,11 @@ public class TermServiceImpl implements TermService {
 
 	@Override
 	public TermDto findOne(Long id) {
-		Term term = Optional.ofNullable(repository.findOne(id))
-				.orElseThrow(() -> new TermException(TERM_NOT_FOUND));
+//		new way in spring data jpa 2 to create find queries
+//		Term t = new Term();
+//		t.setId(id);
+//		repository.findOne(Example.of(t));
+		Term term = repository.findById(id).orElseThrow(() -> new TermException(TERM_NOT_FOUND));
 		return mapToDto.apply(term);
 	}
 }

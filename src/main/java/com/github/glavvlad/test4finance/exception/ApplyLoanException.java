@@ -5,6 +5,9 @@ package com.github.glavvlad.test4finance.exception;
  */
 public class ApplyLoanException extends RuntimeException {
 
+	public static final String REJECTION_BAD_TIME = "Rejection. Bad time for max amount of loan.";
+	public static final String REJECTION_MAX_ATTEMPT = "Rejection. Max attempts reached.";
+
 	public ApplyLoanException() {
 		super();
 	}

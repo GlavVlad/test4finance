@@ -13,10 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
+import static com.github.glavvlad.test4finance.exception.ApplyLoanException.REJECTION_BAD_TIME;
+import static com.github.glavvlad.test4finance.exception.ApplyLoanException.REJECTION_MAX_ATTEMPT;
+import static java.time.LocalDateTime.now;
 import static java.time.LocalTime.MIDNIGHT;
-import static java.time.LocalTime.now;
 import static java.time.LocalTime.of;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
@@ -26,9 +28,6 @@ import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
 @Service
 public class LoanServiceImpl implements LoanService {
-
-	private static final String REJECTION_BAD_TIME = "Rejection. Bad time for max amount of loan.";
-	private static final String REJECTION_MAX_ATTEMPT = "Rejection. Max attempts reached.";
 
 
 	@Autowired
@@ -48,10 +47,10 @@ public class LoanServiceImpl implements LoanService {
 
 	@Transactional(propagation = REQUIRED)
 	@Override
-	public LoanDto apply(ApplyLoanDto dto, String ip) {
+	public LoanDto apply(ApplyLoanDto dto, String ip, LocalTime now) {
 		TermDto term = termService.findOne(dto.getTermId());
 
-		if (isBadTime() && isBadAmount(dto.getAmount(), term.getMaxAmount())) {
+		if (isBadTime(now) && isBadAmount(dto.getAmount(), term.getMaxAmount())) {
 			throw new ApplyLoanException(REJECTION_BAD_TIME);
 		}
 
@@ -79,8 +78,8 @@ public class LoanServiceImpl implements LoanService {
 	 *
 	 * @return true if bad time
 	 */
-	private boolean isBadTime() {
-		return now().isAfter(MIDNIGHT) && now().isBefore(of(6, 0));
+	private boolean isBadTime(LocalTime now) {
+		return now.isAfter(MIDNIGHT) && now.isBefore(of(6, 0));
 	}
 
 	/**
@@ -101,7 +100,7 @@ public class LoanServiceImpl implements LoanService {
 	 * @return true if it is not possible
 	 */
 	private boolean isBadAttempt(String ip) {
-		return attemptService.countAttemptsByIpAfterTime(ip, LocalDateTime.now().minusDays(1)) >= maxAttempt;
+		return attemptService.countAttemptsByIpAfterTime(ip, now().minusDays(1)) >= maxAttempt;
 	}
 
 	private LoanDto mapToDto(Loan loan) {
